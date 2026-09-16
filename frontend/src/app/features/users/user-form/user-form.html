@@ -1,0 +1,39 @@
+<h2>Create User</h2>
+
+<input
+  type="text"
+  placeholder="Username"
+  [(ngModel)]="username"
+/>
+
+<input
+  type="text"
+  placeholder="Full Name"
+  [(ngModel)]="fullName"
+/>
+
+<input
+  type="text"
+  placeholder="Password"
+  [(ngModel)]="password"
+/>
+
+<select [(ngModel)]="role">
+  <option value="USER">USER</option>
+  <option value="MAKER">MAKER</option>
+  <option value="CHECKER">CHECKER</option>
+  <option value="ADMIN">ADMIN</option>
+</select>
+
+<!-- Biến user này : trong file user-form.ts bằng dòng code:
+@Input() user: any = null; -->
+@if(user){
+  <button (click)="updateUser()">
+    Update
+  </button>
+}
+@if(!user){
+  <button (click)="createUser()">
+    Create
+  </button>
+}

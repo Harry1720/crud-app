@@ -1,0 +1,58 @@
+<form [formGroup]="ticketForm" (ngSubmit)="createTicket()">
+    <div>
+        <label>Title</label>
+        <input type="text" formControlName='title'>
+
+        @if(ticketForm.controls.title.errors?.['required']){
+            <p>Title is required.</p>
+        }
+
+        @if(ticketForm.controls.title.errors?.['minlength']){
+            <p>Title must be at least 5 characters.</p>
+        }
+
+        @if(ticketForm.controls.title.errors?.['maxlength']){
+            <p>Title must not over 100 characters.</p>
+        }
+
+        <!-- Biến errors sẽ là một object chứa các thông tin lỗi, ví dụ: errors = { required: true } hoặc errors = { minlength: ... }.
+        Nếu ô Title không có lỗi gì cả. Angular sẽ gán biến errors = null => Buộc dùng optional chaining vì không thể null['required']. -->
+    </div>
+    <div>
+        <label>Description</label>
+        <textarea formControlName="description"></textarea>
+
+
+        
+    </div>
+    <div>
+        <label>Priority</label>
+        <select formControlName="priority">
+            <option value="LOW">Low</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HIGH">High</option>
+        </select>
+    </div>
+    <div>
+        <label>Category</label>
+        <select formControlName="category">
+            <option value="BUG">Bug</option>
+            <option value="FEATURE">Feature</option>
+            <option value="SUPPORT">Support</option>
+        </select>
+    </div>
+    <div>
+        <label>Assignee</label>
+        <select formControlName="assignee">
+            <option value="">Select user</option>
+            <option value="1">Harry</option>
+            <option value="2">John</option>
+        </select>
+
+        @if(ticketForm.controls.assignee.touched && ticketForm.controls.assignee.invalid){
+            <p>Assignee is required.</p>
+        }
+    </div>
+
+    <button type="submit">Create Ticket</button>
+</form>

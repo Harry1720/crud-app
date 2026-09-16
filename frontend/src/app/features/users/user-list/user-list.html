@@ -1,0 +1,37 @@
+<h1>User Management</h1>
+
+<app-user-form
+  (userCreated)="addUser($event)"
+  [user]="editingUser"
+  (userUpdated)="updateUser($event)">
+</app-user-form>
+
+  <!-- Cú pháp (tên_sự_kiện) trong Angular dùng để lắng nghe sự kiện. 
+  ="$event": Biến $event là một biến đặc biệt trong Angular. Khi component con gọi .emit(user), thì cái biến user đó sẽ được tự động gán vào $event ở phía cha.
+  -->
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Username</th>
+      <th>Full Name</th>
+      <th>Role</th>
+      <th>Password</th>
+    </tr>
+  </thead>
+
+  <tbody>
+    @for (user of users; track user.id) {
+      <tr>
+        <td>{{ user.id }}</td>
+        <td>{{ user.username }}</td>
+        <td>{{ user.fullName }}</td>
+        <td>{{ user.role }}</td>
+        <td>{{ user.password }}</td>
+        <td><button (click)="deleteUser(user.id)">Delete</button></td>
+        <td><button (click)="editUser(user)">Edit</button></td>
+      </tr>
+    }
+  </tbody>
+</table>
