@@ -36,7 +36,11 @@ export class TicketForm {
 
   // Tạo ticket
   createTicket(){
-    console.log(this.ticketForm.value);
-    
+    if(this.ticketForm.valid){
+      console.log(this.ticketForm.value);
+    }
+    else{
+      console.log("Please check the errors."); 
+    }
   }
 }
