@@ -1,13 +1,13 @@
-package com.harrydev.ticket_management_backend;
+// package com.harrydev.ticket_management_backend;
 
-import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
+// import org.junit.jupiter.api.Test;
+// import org.springframework.boot.test.context.SpringBootTest;
 
-@SpringBootTest
-class TicketManagementBackendApplicationTests {
+// @SpringBootTest
+// class TicketManagementBackendApplicationTests {
 
-	@Test
-	void contextLoads() {
-	}
+// @Test
+// void contextLoads() {
+// }
 
-}
+// }

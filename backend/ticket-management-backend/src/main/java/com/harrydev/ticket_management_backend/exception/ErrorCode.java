@@ -1,7 +1,9 @@
 package com.harrydev.ticket_management_backend.exception;
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Getter
 public enum ErrorCode {
     USER_EXISTED(1001, "User existed."),
@@ -15,7 +17,7 @@ public enum ErrorCode {
     private int code;
     private String message;
 
-    ErrorCode(int code, String message) {
+    private ErrorCode(int code, String message) {
         this.code = code;
         this.message = message;
     }

@@ -58,7 +58,6 @@ public class GlobalExceptionHandler {
         apiResponse.setMessage(errorCode.getMessage());
 
         return ResponseEntity.badRequest().body(apiResponse);
-
     }
 
     // Cấu hình để nhận các Exception không thuộc các loại trên

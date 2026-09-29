@@ -6,5 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, String> {
-    boolean existsByUsername(String username); //JPA tự động generate query => Kiểm tra sự tồn tại của field username trong DB với username ta truyền vào - không cần viết code nào hết
+    boolean existsByUsername(String username); // JPA tự động generate query => Kiểm tra sự tồn tại của field username
+                                               // trong DB với username ta truyền vào - không cần viết code nào hết
 }

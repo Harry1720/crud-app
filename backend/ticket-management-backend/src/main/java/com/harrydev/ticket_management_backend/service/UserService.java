@@ -16,10 +16,10 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(CreateUserRequestDTO request){
+    public User createUser(CreateUserRequestDTO request) {
         User user = new User();
 
-        if(userRepository.existsByUsername(request.getUsername())){
+        if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
 
@@ -37,17 +37,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public List<User> getUsers(){
+    public List<User> getUsers() {
         return userRepository.findAll();
     }
 
-    public User getUser(String id){
+    public User getUser(String id) {    
         return userRepository.findById(id).orElseThrow(
-            ()-> new AppException(ErrorCode.USER_NOT_FOUND)
-        );
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
-    public User updateUser(String userId, UpdateUserRequestDTO request){
+    public User updateUser(String userId, UpdateUserRequestDTO request) {
         User user = getUser(userId);
         user.setPassword(request.getPassword());
         user.setFirstName(request.getFirstName());
@@ -61,7 +60,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public void deleteUser(String id){
+    public void deleteUser(String id) {
         userRepository.deleteById(id);
     }
 
