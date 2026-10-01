@@ -5,6 +5,7 @@ import com.harrydev.ticket_management_backend.dto.request.UpdateUserRequestDTO;
 import com.harrydev.ticket_management_backend.entity.User;
 import com.harrydev.ticket_management_backend.exception.AppException;
 import com.harrydev.ticket_management_backend.exception.ErrorCode;
+import com.harrydev.ticket_management_backend.mapper.UserMapper;
 import com.harrydev.ticket_management_backend.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,23 +17,32 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User createUser(CreateUserRequestDTO request) {
-        User user = new User();
+    //Cách 2 truyển data từ request vào Entity (1)
+    @Autowired
+    private UserMapper userMapper;
 
+    public User createUser(CreateUserRequestDTO request) {
+        
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-
+        
         // Cách 1
-        user.setUsername(request.getUsername());
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setRole(request.getRole());
-        user.setDateOfBirth(request.getDateOfBirth());
-        user.setGender(request.getGender());
+        
+        // User user = new User();
+        
+        // user.setUsername(request.getUsername());
+        // user.setPassword(request.getPassword());
+        // user.setFirstName(request.getFirstName());
+        // user.setLastName(request.getLastName());
+        // user.setEmail(request.getEmail());
+        // user.setPhoneNumber(request.getPhoneNumber());
+        // user.setRole(request.getRole());
+        // user.setDateOfBirth(request.getDateOfBirth());
+        // user.setGender(request.getGender());
+
+        //Cách 2 truyển data từ request vào Entity (2)
+        User user = userMapper.toUser(request);
 
         return userRepository.save(user);
     }
@@ -41,21 +51,26 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUser(String id) {    
+    public User getUser(String id) {
         return userRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
     }
 
     public User updateUser(String userId, UpdateUserRequestDTO request) {
+       
         User user = getUser(userId);
-        user.setPassword(request.getPassword());
-        user.setFirstName(request.getFirstName());
-        user.setLastName(request.getLastName());
-        user.setEmail(request.getEmail());
-        user.setPhoneNumber(request.getPhoneNumber());
-        user.setRole(request.getRole());
-        user.setDateOfBirth(request.getDateOfBirth());
-        user.setGender(request.getGender());
+        //Cách 1
+        // user.setPassword(request.getPassword());
+        // user.setFirstName(request.getFirstName());
+        // user.setLastName(request.getLastName());
+        // user.setEmail(request.getEmail());
+        // user.setPhoneNumber(request.getPhoneNumber());
+        // user.setRole(request.getRole());
+        // user.setDateOfBirth(request.getDateOfBirth());
+        // user.setGender(request.getGender());
+
+        //Cách 2
+        userMapper.updateUser(user, request);
 
         return userRepository.save(user);
     }

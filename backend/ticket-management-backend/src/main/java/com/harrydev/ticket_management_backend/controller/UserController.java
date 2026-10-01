@@ -40,12 +40,17 @@ public class UserController {
     }
 
     @PutMapping("/{userId}")
-    public User updateUser(@PathVariable String userId, @RequestBody UpdateUserRequestDTO request) {
-        return userService.updateUser(userId, request);
+    public ApiResponse<User> updateUser(@PathVariable String userId, @RequestBody UpdateUserRequestDTO request) {
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setResult(userService.updateUser(userId, request));
+        apiResponse.setCode(1010);
+        apiResponse.setMessage("Cập nhật user thành công");
+
+        return apiResponse;
     }
 
     @DeleteMapping("/{userId}")
-    String deleteUser(@PathVariable String userId) {
+    public String deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         return "Delete user successfully!";
     }
