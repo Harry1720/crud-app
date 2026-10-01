@@ -9,12 +9,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@FieldDefaults(level= AccessLevel.PRIVATE)
+@FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class UserResponse {
-    //Chứa các trường như trong UserEntity
+    // Chứa các trường như trong UserEntity
     String id;
-
     String username;
     String password;
     String firstName;

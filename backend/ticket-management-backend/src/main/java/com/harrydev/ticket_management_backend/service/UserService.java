@@ -2,24 +2,30 @@ package com.harrydev.ticket_management_backend.service;
 
 import com.harrydev.ticket_management_backend.dto.request.CreateUserRequestDTO;
 import com.harrydev.ticket_management_backend.dto.request.UpdateUserRequestDTO;
+import com.harrydev.ticket_management_backend.dto.response.UserResponse;
 import com.harrydev.ticket_management_backend.entity.User;
 import com.harrydev.ticket_management_backend.exception.AppException;
 import com.harrydev.ticket_management_backend.exception.ErrorCode;
 import com.harrydev.ticket_management_backend.mapper.UserMapper;
 import com.harrydev.ticket_management_backend.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
+
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
+
 public class UserService {
-    @Autowired
-    private UserRepository userRepository;
+    UserRepository userRepository;
 
     //Cách 2 truyển data từ request vào Entity (1)
-    @Autowired
-    private UserMapper userMapper;
+    UserMapper userMapper;
 
     public User createUser(CreateUserRequestDTO request) {
         
@@ -51,14 +57,15 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public User getUser(String id) {
-        return userRepository.findById(id).orElseThrow(
-                () -> new AppException(ErrorCode.USER_NOT_FOUND));
+    public UserResponse getUser(String id) {
+        return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
-    public User updateUser(String userId, UpdateUserRequestDTO request) {
+    public UserResponse updateUser(String userId, UpdateUserRequestDTO request) {
        
-        User user = getUser(userId);
+        User user = userRepository.findById(userId).orElseThrow(
+                () -> new AppException(ErrorCode.USER_NOT_FOUND));
         //Cách 1
         // user.setPassword(request.getPassword());
         // user.setFirstName(request.getFirstName());
@@ -72,7 +79,7 @@ public class UserService {
         //Cách 2
         userMapper.updateUser(user, request);
 
-        return userRepository.save(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public void deleteUser(String id) {

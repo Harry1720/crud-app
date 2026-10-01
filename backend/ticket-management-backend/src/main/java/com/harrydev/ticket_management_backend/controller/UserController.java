@@ -3,10 +3,14 @@ package com.harrydev.ticket_management_backend.controller;
 import com.harrydev.ticket_management_backend.dto.request.ApiResponse;
 import com.harrydev.ticket_management_backend.dto.request.CreateUserRequestDTO;
 import com.harrydev.ticket_management_backend.dto.request.UpdateUserRequestDTO;
+import com.harrydev.ticket_management_backend.dto.response.UserResponse;
 import com.harrydev.ticket_management_backend.entity.User;
 import com.harrydev.ticket_management_backend.service.UserService;
 import jakarta.validation.Valid;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+
+import lombok.experimental.FieldDefaults;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -15,9 +19,11 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/users") // Khai báo cái này thì các phương thức ở dưới không cần khai báo enpoint nữa,
                               // chỉ viết phương thức
+@RequiredArgsConstructor
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal=true)
+
 public class UserController {
-    @Autowired
-    private UserService userService;
+    UserService userService;
 
     @PostMapping
     public ApiResponse<User> createUser(@RequestBody @Valid CreateUserRequestDTO request) {
@@ -35,12 +41,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public User getUser(@PathVariable("userId") String userId) {
+    public UserResponse getUser(@PathVariable String userId) {
         return userService.getUser(userId);
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<User> updateUser(@PathVariable String userId, @RequestBody UpdateUserRequestDTO request) {
+    public ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UpdateUserRequestDTO request) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(userService.updateUser(userId, request));
         apiResponse.setCode(1010);
@@ -50,8 +56,11 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public String deleteUser(@PathVariable String userId) {
+    public ApiResponse deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
-        return "Delete user successfully!";
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setCode(1009);
+        apiResponse.setMessage("Delete user successfully!");
+        return apiResponse;
     }
 }
