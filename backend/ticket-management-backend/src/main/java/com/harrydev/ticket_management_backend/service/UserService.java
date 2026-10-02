@@ -13,6 +13,8 @@ import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -49,6 +51,10 @@ public class UserService {
 
         //Cách 2 truyển data từ request vào Entity (2)
         User user = userMapper.toUser(request);
+
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10); //số càng lớn => MK càng khó giải mã. Nếu quá lớn thì ảnh hưởng performance của hệ thống.
+        //Tùy chỉnh số cho phù hợp với yêu cầu hệ thống (Vd: mã hóa dưới 1s)
+        user.setPassword(passwordEncoder.encode(request.getPassword()));
 
         return userRepository.save(user);
     }
