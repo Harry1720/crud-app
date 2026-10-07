@@ -9,10 +9,15 @@ import com.harrydev.ticket_management_backend.exception.ErrorCode;
 import com.harrydev.ticket_management_backend.mapper.UserMapper;
 import com.harrydev.ticket_management_backend.repository.UserRepository;
 
+import jakarta.ws.rs.core.Response;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
+import lombok.experimental.NonFinal;
+import org.keycloak.representations.idm.CredentialRepresentation;
+import org.keycloak.representations.idm.UserRepresentation;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,34 +34,46 @@ public class UserService {
     //Cách 2 truyển data từ request vào Entity (1)
     UserMapper userMapper;
 
-    public User createUser(CreateUserRequestDTO request) {
+    @NonFinal
+    @Value("${keycloak.realm}")
+    String realm;
+
+    org.keycloak.admin.client.Keycloak keycloak;
+
+    public UserResponse createUser(CreateUserRequestDTO request) {
         
         if (userRepository.existsByUsername(request.getUsername())) {
             throw new AppException(ErrorCode.USER_EXISTED);
         }
-        
-        // Cách 1
-        
-        // User user = new User();
-        
-        // user.setUsername(request.getUsername());
-        // user.setPassword(request.getPassword());
-        // user.setFirstName(request.getFirstName());
-        // user.setLastName(request.getLastName());
-        // user.setEmail(request.getEmail());
-        // user.setPhoneNumber(request.getPhoneNumber());
-        // user.setRole(request.getRole());
-        // user.setDateOfBirth(request.getDateOfBirth());
-        // user.setGender(request.getGender());
 
-        //Cách 2 truyển data từ request vào Entity (2)
+        // 1. Tạo thông tin User cho Keycloak
+        CredentialRepresentation credential = new CredentialRepresentation();
+        credential.setType(org.keycloak.representations.idm.CredentialRepresentation.PASSWORD);
+        credential.setValue(request.getPassword());
+        credential.setTemporary(false); // Quan trọng: Tắt temporary để không bắt đổi mật khẩu
+
+        UserRepresentation keycloakUser = new UserRepresentation();
+        keycloakUser.setUsername(request.getUsername());
+        keycloakUser.setFirstName(request.getFirstName());
+        keycloakUser.setLastName(request.getLastName());
+        keycloakUser.setEmail(request.getEmail());
+        keycloakUser.setEnabled(true);
+        keycloakUser.setCredentials(java.util.Collections.singletonList(credential));
+
+        // 2. Gọi API tạo User trên Keycloak
+        Response response = keycloak.realm(realm).users().create(keycloakUser);
+        
+        if (response.getStatus() != 201) {
+            throw new RuntimeException("Lỗi tạo user trên Keycloak: " + response.getStatusInfo().getReasonPhrase());
+        }
+
+        // 3. (Tuỳ chọn) Lưu vào Local DB (PostgreSQL)
         User user = userMapper.toUser(request);
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10); //số càng lớn => MK càng khó giải mã. Nếu quá lớn thì ảnh hưởng performance của hệ thống.
-        //Tùy chỉnh số cho phù hợp với yêu cầu hệ thống (Vd: mã hóa dưới 1s)
+        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10); 
         user.setPassword(passwordEncoder.encode(request.getPassword()));
 
-        return userRepository.save(user);
+        return userMapper.toUserResponse(userRepository.save(user));
     }
 
     public List<User> getUsers() {

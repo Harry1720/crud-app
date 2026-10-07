@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/api/users") // Khai báo cái này thì các phương thức ở dưới không cần khai báo enpoint nữa,
                               // chỉ viết phương thức
 @RequiredArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal=true)
+@FieldDefaults(level = AccessLevel.PRIVATE, makeFinal = true)
 
 public class UserController {
     UserService userService;
@@ -29,7 +29,7 @@ public class UserController {
     public ApiResponse<User> createUser(@RequestBody @Valid CreateUserRequestDTO request) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(userService.createUser(request));
-        apiResponse.setCode(1000);
+        apiResponse.setCode(2000);
         apiResponse.setMessage("Thêm user thành công");
 
         return apiResponse;
@@ -49,7 +49,7 @@ public class UserController {
     public ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UpdateUserRequestDTO request) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(userService.updateUser(userId, request));
-        apiResponse.setCode(1010);
+        apiResponse.setCode(2001);
         apiResponse.setMessage("Cập nhật user thành công");
 
         return apiResponse;
@@ -59,7 +59,7 @@ public class UserController {
     public ApiResponse deleteUser(@PathVariable String userId) {
         userService.deleteUser(userId);
         ApiResponse apiResponse = new ApiResponse();
-        apiResponse.setCode(1009);
+        apiResponse.setCode(2002);
         apiResponse.setMessage("Delete user successfully!");
         return apiResponse;
     }

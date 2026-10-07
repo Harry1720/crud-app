@@ -12,6 +12,8 @@ public enum ErrorCode {
     INVALID_USERNAME(1003, "Username must be at least 3 characters"),
     INVALID_PASSWORD(1004, "Password must be at least 8 characters"),
 
+    UNAUTHENTICATED(1005, "Authentication failed"),
+
     INVALID_MESSAGE_KEY(1111, "Invalid message key");
 
     private int code;
