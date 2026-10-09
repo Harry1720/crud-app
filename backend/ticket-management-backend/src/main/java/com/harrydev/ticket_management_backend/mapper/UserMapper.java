@@ -11,11 +11,25 @@ import org.mapstruct.MappingTarget;
 @Mapper(componentModel = "spring")
 public interface UserMapper {
 
-    @Mapping(target = "password", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "keycloakId", ignore = true)
+    @Mapping(target = "fullName", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "roleEntity", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     User toUser(CreateUserRequestDTO request); // Nhận request kiểu DTO và trả về kiểu User, tương ứng việc ta truyền
                                                // từng thuộc tính từ request vào cho entity User để lưu vào DB.
 
     @Mapping(target = "id", ignore = true)
+    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "keycloakId", ignore = true)
+    @Mapping(target = "fullName", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "roleEntity", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    @Mapping(target = "role", ignore = true)
     void updateUser(@MappingTarget User user, UpdateUserRequestDTO request);
 
     @Mapping(target = "id", ignore = true)

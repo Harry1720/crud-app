@@ -26,7 +26,7 @@ public class KeycloakConfig {
     public Keycloak keycloak() {
         return KeycloakBuilder.builder()
                 .serverUrl(serverUrl)
-                .realm(realm) // Đã dùng biến realm (ticket_management_realm)
+                .realm(realm) // (ticket_management_realm)
                 .grantType(OAuth2Constants.CLIENT_CREDENTIALS) // Dùng Client Credentials thay vì password
                 .clientId(clientId)
                 .clientSecret(clientSecret)

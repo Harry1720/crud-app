@@ -4,6 +4,7 @@ import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Data
 @NoArgsConstructor
@@ -12,10 +13,13 @@ import java.time.LocalDate;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 
 public class UserResponse {
-    // Chứa các trường như trong UserEntity
-    String id;
+    Long id;
+    String keycloakId;
     String username;
-    String password;
+    String fullName;
+    String status;
+    ZonedDateTime createdAt;
+    ZonedDateTime updatedAt;
     String firstName;
     String lastName;
     String email;

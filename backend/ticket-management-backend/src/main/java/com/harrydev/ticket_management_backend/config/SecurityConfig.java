@@ -2,7 +2,6 @@ package com.harrydev.ticket_management_backend.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
@@ -16,11 +15,11 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable()) // Tắt CSRF vì đây là REST API
-                .authorizeHttpRequests(authz -> authz
+                .authorizeHttpRequests(auth -> auth
                         // Các endpoint public không cần token
                         .requestMatchers("/auth/**").permitAll()
                         .requestMatchers("/api/users").permitAll()
-                        // .requestMatchers(HttpMethod.GET, "/users")
+
                         // Tất cả các request còn lại đều cần phải có token hợp lệ
                         .anyRequest().authenticated())
                 // Kích hoạt OAuth2 Resource Server dùng JWT

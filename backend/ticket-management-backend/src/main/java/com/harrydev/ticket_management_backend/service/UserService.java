@@ -15,13 +15,15 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 
 import lombok.experimental.NonFinal;
+import org.keycloak.admin.client.Keycloak;
 import org.keycloak.representations.idm.CredentialRepresentation;
 import org.keycloak.representations.idm.UserRepresentation;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
+
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -31,14 +33,13 @@ import java.util.List;
 public class UserService {
     UserRepository userRepository;
 
-    //Cách 2 truyển data từ request vào Entity (1)
     UserMapper userMapper;
 
     @NonFinal
     @Value("${keycloak.realm}")
     String realm;
 
-    org.keycloak.admin.client.Keycloak keycloak;
+    Keycloak keycloak;
 
     public UserResponse createUser(CreateUserRequestDTO request) {
         
@@ -48,7 +49,7 @@ public class UserService {
 
         // 1. Tạo thông tin User cho Keycloak
         CredentialRepresentation credential = new CredentialRepresentation();
-        credential.setType(org.keycloak.representations.idm.CredentialRepresentation.PASSWORD);
+        credential.setType(CredentialRepresentation.PASSWORD);
         credential.setValue(request.getPassword());
         credential.setTemporary(false); // Quan trọng: Tắt temporary để không bắt đổi mật khẩu
 
@@ -58,7 +59,7 @@ public class UserService {
         keycloakUser.setLastName(request.getLastName());
         keycloakUser.setEmail(request.getEmail());
         keycloakUser.setEnabled(true);
-        keycloakUser.setCredentials(java.util.Collections.singletonList(credential));
+        keycloakUser.setCredentials(Collections.singletonList(credential));
 
         // 2. Gọi API tạo User trên Keycloak
         Response response = keycloak.realm(realm).users().create(keycloakUser);
@@ -70,9 +71,11 @@ public class UserService {
         // 3. (Tuỳ chọn) Lưu vào Local DB (PostgreSQL)
         User user = userMapper.toUser(request);
 
-        PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(10); 
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-
+        // Lấy keycloakId từ response của Keycloak
+        String keycloakId = org.keycloak.admin.client.CreatedResponseUtil.getCreatedId(response);
+        user.setKeycloakId(keycloakId);
+        user.setFullName(request.getFirstName() + " " + request.getLastName());
+        user.setStatus("ACTIVE");
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
@@ -80,12 +83,12 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public UserResponse getUser(String id) {
+    public UserResponse getUser(Long id) {
         return userMapper.toUserResponse(userRepository.findById(id).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND)));
     }
 
-    public UserResponse updateUser(String userId, UpdateUserRequestDTO request) {
+    public UserResponse updateUser(Long userId, UpdateUserRequestDTO request) {
        
         User user = userRepository.findById(userId).orElseThrow(
                 () -> new AppException(ErrorCode.USER_NOT_FOUND));
@@ -105,7 +108,7 @@ public class UserService {
         return userMapper.toUserResponse(userRepository.save(user));
     }
 
-    public void deleteUser(String id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
 

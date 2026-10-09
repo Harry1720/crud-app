@@ -7,6 +7,9 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.time.ZonedDateTime;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Getter
 @Setter
@@ -17,14 +20,32 @@ import java.time.LocalDate;
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    private String id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(name = "keycloak_id", nullable = false, unique = true)
+    private String keycloakId;
+
+    @Column(name = "full_name", nullable = false, length = 150)
+    private String fullName;
+
+    @Column(length = 10)
+    private String status;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "role_id")
+    private Role roleEntity;
+
+    @CreationTimestamp
+    @Column(name = "created_at")
+    private ZonedDateTime createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private ZonedDateTime updatedAt;
 
     @Column(nullable = false, unique = true, length = 50) //length = 50 → giới hạn độ dài
     private String username;
-
-    @Column(nullable = false)
-    private String password;
 
     @Column(nullable = false, length = 50)
     private String firstName;

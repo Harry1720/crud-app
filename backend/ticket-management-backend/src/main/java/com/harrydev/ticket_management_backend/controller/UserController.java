@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-// @CrossOrigin(origins = "http://localhost:4200") // ? Công dụng ==> chuyển qua config
 @RestController
 @RequestMapping("/api/users") // Khai báo cái này thì các phương thức ở dưới không cần khai báo enpoint nữa,
                               // chỉ viết phương thức
@@ -41,12 +40,12 @@ public class UserController {
     }
 
     @GetMapping("/{userId}")
-    public UserResponse getUser(@PathVariable String userId) {
+    public UserResponse getUser(@PathVariable Long userId) {
         return userService.getUser(userId);
     }
 
     @PutMapping("/{userId}")
-    public ApiResponse<UserResponse> updateUser(@PathVariable String userId, @RequestBody UpdateUserRequestDTO request) {
+    public ApiResponse<UserResponse> updateUser(@PathVariable Long userId, @RequestBody @Valid UpdateUserRequestDTO request) {
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setResult(userService.updateUser(userId, request));
         apiResponse.setCode(2001);
@@ -56,7 +55,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{userId}")
-    public ApiResponse deleteUser(@PathVariable String userId) {
+    public ApiResponse deleteUser(@PathVariable Long userId) {
         userService.deleteUser(userId);
         ApiResponse apiResponse = new ApiResponse();
         apiResponse.setCode(2002);
