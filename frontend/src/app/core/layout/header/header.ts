@@ -1,9 +1,16 @@
 import { Component } from '@angular/core';
+import { RouterLink } from '@angular/router';
 
 @Component({
-  imports: [],
+  imports: [RouterLink],
   selector: 'app-header',
   styleUrl: './header.scss',
   templateUrl: './header.html',
 })
-export class Header {}
+export class Header {
+  menuOpen = false;
+
+  closeMenu(): void {
+    this.menuOpen = false;
+  }
+}

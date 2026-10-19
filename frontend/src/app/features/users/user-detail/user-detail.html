@@ -1,1 +1,19 @@
-<p>user-detail works!</p>
+<h1>Chi tiết user</h1>
+
+@if (loading) {
+  <p>Đang tải thông tin user...</p>
+} @else if (error) {
+  <p role="alert">{{ error }}</p>
+} @else if (user) {
+  <ul>
+    <li>Username: {{ user.username }}</li>
+    <li>Họ và tên: {{ user.firstName }} {{ user.lastName }}</li>
+    <li>Email: {{ user.email || '—' }}</li>
+    <li>Số điện thoại: {{ user.phoneNumber || '—' }}</li>
+    <li>Ngày sinh: {{ user.dateOfBirth || '—' }}</li>
+    <li>Giới tính: {{ user.gender || '—' }}</li>
+    <li>Trạng thái: {{ user.status || '—' }}</li>
+  </ul>
+}
+
+<a routerLink="/userlist">Quay lại danh sách</a>

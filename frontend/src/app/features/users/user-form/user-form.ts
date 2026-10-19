@@ -11,7 +11,6 @@ export class UserForm {
   username = '';
   fullName = '';
   password = '';
-  role = 'USER';
 
   @Input() user: any = null;
 
@@ -24,8 +23,7 @@ export class UserForm {
     const user = {
       username: this.username,
       fullName: this.fullName,
-      password: this.password,
-      role: this.role
+      password: this.password
     };
 
     this.userCreated.emit(user);
@@ -37,7 +35,6 @@ export class UserForm {
     this.username = '';
     this.fullName = '';
     this.password = '';
-    this.role = 'USER';
   }
   
   ngOnChanges(){ //?
@@ -45,7 +42,6 @@ export class UserForm {
       //Đổ dữ liệu lên form
       this.username=this.user.username;
       this.fullName=this.user.fullName;
-      this.role=this.user.role;
       this.password = this.user.password;
     }
   }
@@ -56,8 +52,7 @@ export class UserForm {
       id: this.user.id,
       username: this.username,
       fullName: this.fullName,
-      password: this.password,
-      role: this.role
+      password: this.password
     }
     this.userUpdated.emit(updatedUser);
 
@@ -65,6 +60,5 @@ export class UserForm {
     this.username = '';
     this.fullName = '';
     this.password = '';
-    this.role = 'USER';
   }
 }

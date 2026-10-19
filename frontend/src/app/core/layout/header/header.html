@@ -1,1 +1,32 @@
-<p>header works!</p>
+<header class="site-header">
+  <div class="header-inner">
+    <a class="brand" routerLink="/" aria-label="Eventra — Trang chủ" (click)="closeMenu()">
+      <span class="brand-mark" aria-hidden="true">e</span>
+      <span>eventra<span class="brand-period">.</span></span>
+    </a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-label="Mở menu điều hướng"
+      [attr.aria-expanded]="menuOpen"
+      (click)="menuOpen = !menuOpen">
+      <span></span><span></span>
+    </button>
+
+    <nav class="main-nav" [class.is-open]="menuOpen" aria-label="Điều hướng chính">
+      <a routerLink="/" [fragment]="'events'" (click)="closeMenu()">Khám phá</a>
+      <a routerLink="/" [fragment]="'categories'" (click)="closeMenu()">Danh mục</a>
+      <a routerLink="/" [fragment]="'about'" (click)="closeMenu()">Về Eventra</a>
+      <div class="mobile-actions">
+        <a class="mobile-login" routerLink="/login" (click)="closeMenu()">Đăng nhập</a>
+        <a class="mobile-signup" routerLink="/signup" (click)="closeMenu()">Tạo tài khoản</a>
+      </div>
+    </nav>
+
+    <div class="header-actions">
+      <a class="login-link" routerLink="/login">Đăng nhập</a>
+      <a class="signup-link" routerLink="/signup">Tạo tài khoản <span aria-hidden="true">↗</span></a>
+    </div>
+  </div>
+</header>

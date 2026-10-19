@@ -1,0 +1,32 @@
+package com.harrydev.ticket_management_backend.mapper;
+
+import com.harrydev.ticket_management_backend.dto.request.CreateUserRequestDTO;
+import com.harrydev.ticket_management_backend.dto.request.UpdateUserRequestDTO;
+import com.harrydev.ticket_management_backend.dto.response.UserResponse;
+import com.harrydev.ticket_management_backend.entity.User;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
+
+@Mapper(componentModel = "spring")
+public interface UserMapper {
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "keycloakId", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    User toUser(CreateUserRequestDTO request); // Nhận request kiểu DTO và trả về kiểu User, tương ứng việc ta truyền
+                                               // từng thuộc tính từ request vào cho entity User để lưu vào DB.
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "username", ignore = true)
+    @Mapping(target = "keycloakId", ignore = true)
+    @Mapping(target = "status", ignore = true)
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
+    void updateUser(@MappingTarget User user, UpdateUserRequestDTO request);
+
+    UserResponse toUserResponse(User user); // Dùng để cấu hình bên controller => Controller không trả về User nữa mà
+                                            // trả về các trường cần thiết
+}

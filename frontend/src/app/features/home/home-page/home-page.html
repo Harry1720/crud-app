@@ -1,0 +1,142 @@
+<div class="home-page">
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-background"></div>
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="eyebrow"><span></span> THÀNH PHỐ ĐANG CÓ GÌ?</p>
+        <h1 id="hero-title">Đi tìm điều<br />khiến bạn <em>háo hức.</em></h1>
+        <p class="hero-description">
+          Một buổi tối thật vui. Một người bạn mới. Một câu chuyện để kể.
+          Chọn trải nghiệm tiếp theo của bạn.
+        </p>
+
+        <form class="search-box" role="search" (submit)="$event.preventDefault()">
+          <span class="search-icon" aria-hidden="true">⌕</span>
+          <input
+            type="search"
+            placeholder="Bạn muốn đi đâu, làm gì?"
+            aria-label="Tìm sự kiện theo tên, địa điểm hoặc danh mục"
+            (input)="updateSearch($event)" />
+          <button type="submit">Tìm sự kiện <span aria-hidden="true">↗</span></button>
+        </form>
+
+        <div class="hero-note">
+          <div class="avatar-stack" aria-hidden="true"><span>H</span><span>M</span><span>A</span><span>+</span></div>
+          <span>Được yêu thích bởi <strong>12.000+</strong> người mê trải nghiệm</span>
+        </div>
+      </div>
+
+      <div class="hero-visual" aria-label="Không khí tại một sự kiện âm nhạc buổi tối">
+        <div class="hero-photo"></div>
+        <div class="photo-grain"></div>
+        <div class="hero-photo-caption">
+          <span class="caption-kicker">CUỐI TUẦN NÀY</span>
+          <strong>Thành phố<br />lên đèn.</strong>
+          <span class="caption-location">Sài Gòn · 24.10</span>
+        </div>
+        <div class="floating-ticket">
+          <span class="ticket-icon" aria-hidden="true">✳</span>
+          <span><strong>Điều hay đang chờ</strong><small>Khám phá sự kiện quanh bạn</small></span>
+          <span class="ticket-arrow" aria-hidden="true">↗</span>
+        </div>
+        <span class="hero-spark spark-one" aria-hidden="true">✳</span>
+        <span class="hero-spark spark-two" aria-hidden="true">✦</span>
+      </div>
+    </div>
+
+    <div class="hero-bottom-line">
+      <span>01 — 06</span>
+      <span class="line"></span>
+      <span>TRẢI NGHIỆM ĐÁNG NHỚ, BẮT ĐẦU TỪ ĐÂY</span>
+    </div>
+  </section>
+
+  <section class="category-section section-wrap" id="categories" aria-labelledby="category-title">
+    <div class="section-heading category-heading">
+      <div>
+        <p class="eyebrow eyebrow-light">CHỌN THEO TÂM TRẠNG</p>
+        <h2 id="category-title">Hôm nay bạn muốn <em>gì?</em></h2>
+      </div>
+      <p class="section-aside">Có điều gì đó dành riêng<br />cho mỗi phiên bản của bạn.</p>
+    </div>
+
+    <div class="category-grid">
+      @for (category of categories; track category.name) {
+        <button [class]="'category-tile ' + category.tone" type="button" (click)="selectCategory(category.name)">
+          <span class="category-icon" aria-hidden="true">{{ category.icon }}</span>
+          <span class="category-name">{{ category.name }}</span>
+          <span class="category-arrow" aria-hidden="true">↗</span>
+        </button>
+      }
+    </div>
+  </section>
+
+  <section class="events-section section-wrap" id="events" aria-labelledby="events-title">
+    <div class="section-heading events-heading">
+      <div>
+        <p class="eyebrow eyebrow-light">ĐƯỢC CHỌN RIÊNG CHO BẠN</p>
+        <h2 id="events-title">Sự kiện <em>nổi bật</em></h2>
+      </div>
+      <div class="event-filters" aria-label="Lọc theo danh mục">
+        <button type="button" [class.active]="selectedCategory() === 'Tất cả'" (click)="selectCategory('Tất cả')">Tất cả</button>
+        <button type="button" [class.active]="selectedCategory() === 'Âm nhạc'" (click)="selectCategory('Âm nhạc')">Âm nhạc</button>
+        <button type="button" [class.active]="selectedCategory() === 'Nghệ thuật'" (click)="selectCategory('Nghệ thuật')">Nghệ thuật</button>
+        <button type="button" [class.active]="selectedCategory() === 'Ẩm thực'" (click)="selectCategory('Ẩm thực')">Ẩm thực</button>
+      </div>
+    </div>
+
+    @if (filteredEvents().length > 0) {
+      <div class="event-grid">
+        @for (event of filteredEvents(); track event.id) {
+          <article class="event-card">
+            <div [class]="'event-art ' + event.tone">
+              <img [src]="event.image" [alt]="'Không gian sự kiện ' + event.title" loading="lazy" />
+              @if (event.badge) {
+                <span class="event-badge">{{ event.badge }}</span>
+              }
+              <div class="date-stamp"><strong>{{ event.day }}</strong><span>{{ event.month }}</span></div>
+              <button class="save-event" type="button" [attr.aria-label]="'Lưu sự kiện ' + event.title">♡</button>
+            </div>
+            <div class="event-info">
+              <div class="event-meta"><span>{{ event.category }}</span><span>{{ event.date }}</span></div>
+              <h3>{{ event.title }}</h3>
+              <p class="event-venue"><span aria-hidden="true">⌖</span> {{ event.venue }} · {{ event.city }}</p>
+              <div class="event-card-bottom"><strong>{{ event.price }}</strong><a [routerLink]="'/signup'" [attr.aria-label]="'Đăng ký để đặt vé ' + event.title">Đặt vé <span aria-hidden="true">↗</span></a></div>
+            </div>
+          </article>
+        }
+      </div>
+    } @else {
+      <div class="empty-results">
+        <span aria-hidden="true">⌕</span>
+        <h3>Chưa tìm thấy sự kiện phù hợp</h3>
+        <p>Thử từ khóa khác hoặc xem tất cả sự kiện nhé.</p>
+        <button type="button" (click)="selectedCategory.set('Tất cả'); searchTerm.set('')">Xóa bộ lọc</button>
+      </div>
+    }
+
+    <div class="events-bottom"><span>ĐANG HIỂN THỊ {{ filteredEvents().length }} TRẢI NGHIỆM</span><a routerLink="/signup">Khám phá thêm <span aria-hidden="true">↗</span></a></div>
+  </section>
+
+  <section class="organizer-banner section-wrap">
+    <div class="organizer-copy">
+      <p class="eyebrow">DÀNH CHO NGƯỜI TẠO NÊN ĐIỀU HAY</p>
+      <h2>Có một sự kiện<br />muốn <em>kể với mọi người?</em></h2>
+      <p>Đưa ý tưởng của bạn đến gần hơn với những người đang tìm kiếm trải nghiệm mới.</p>
+      <a routerLink="/signup">Bắt đầu tổ chức <span aria-hidden="true">↗</span></a>
+    </div>
+    <div class="organizer-art" aria-hidden="true">
+      <span class="organizer-orbit orbit-a"></span>
+      <span class="organizer-orbit orbit-b"></span>
+      <span class="organizer-star">✳</span>
+      <span class="organizer-label">Ý TƯỞNG<br />GẶP CỘNG ĐỒNG</span>
+      <span class="organizer-dot dot-a"></span><span class="organizer-dot dot-b"></span><span class="organizer-dot dot-c"></span>
+    </div>
+  </section>
+
+  <section class="promise-strip section-wrap">
+    <div><span>01</span><p><strong>Chọn điều bạn thích</strong><small>Khám phá theo sở thích và thời gian của bạn.</small></p></div>
+    <div><span>02</span><p><strong>Đặt vé thật dễ dàng</strong><small>Chọn hạng vé, xác nhận và sẵn sàng lên đường.</small></p></div>
+    <div><span>03</span><p><strong>Lưu giữ khoảnh khắc</strong><small>Những trải nghiệm hay nhất là để sẻ chia.</small></p></div>
+  </section>
+</div>

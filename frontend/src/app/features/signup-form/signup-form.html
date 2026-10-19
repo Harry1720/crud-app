@@ -1,43 +1,109 @@
-<form [formGroup]="signupForm" (ngSubmit)="onSubmitSignUp()">
-    <h2>Sign Up</h2>
-    <div>
-        <label>Full Name</label>
-        <input type="text" formControlName="fullName"/>
-        @if(signupForm.controls.fullName.errors?.['required'] && signupForm.controls.fullName.touched){
-            <p>Your name is required.</p>
-        }
+<main class="auth-page signup-page">
+  <section class="auth-card signup-card" aria-labelledby="signup-title">
+    <div class="auth-heading">
+      <span class="auth-kicker">BẮT ĐẦU HÀNH TRÌNH CỦA BẠN</span>
+      <h1 id="signup-title">Tạo tài khoản Eventra.</h1>
+      <p>Đăng ký để khám phá và đặt vé cho những trải nghiệm đáng nhớ.</p>
     </div>
-    <div>
-        <label>Username</label>
-        <input type="text" formControlName="username"/>
-    </div>
-    <div>
-        <label>Email</label>
-        <input type="email" formControlName="email"/>
-        <!-- Old style -->
-        <!-- <p *ngIf="signupForm.controls.email.errors?.['email']">
-            Your email is invalid.
-        </p> -->
 
-        <!-- New style -->
-        @if(signupForm.controls.email.errors?.['email']){
-            <p>Your email is invalid.</p>
-        }
-    </div>
-    <div>
-        <label>Phone</label>
-        <input type="text" formControlName="phoneNumber"/>
-    </div>
-    <div>
-        <label>Password</label>
-        <input type="password" formControlName="password"/>
-    </div>
-    <div>
-        <label>Confirm password</label>
-        <input type="password" formControlName="passwordRetype"/>
-        @if(signupForm.errors?.['passwordMismatch'] && signupForm.controls.passwordRetype.touched){
-            <p>Password do not match. Please check again.</p>
-        }
-    </div>
-    
-</form>
+    @if(submitAttempted && signupForm.invalid){
+      <p class="form-alert" role="alert">Vui lòng kiểm tra lại thông tin và xác nhận mật khẩu trùng khớp.</p>
+    }
+
+    <form [formGroup]="signupForm" (ngSubmit)="onSubmitSignUp()" novalidate>
+      <div class="signup-grid">
+        <div class="form-field">
+          <label for="signup-first-name">Tên</label>
+          <input id="signup-first-name" type="text" formControlName="firstName" autocomplete="given-name" placeholder="Tên của bạn">
+          @if(signupForm.controls.firstName.errors?.['required'] && signupForm.controls.firstName.touched){
+            <span class="field-error">Vui lòng nhập tên.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="signup-last-name">Họ</label>
+          <input id="signup-last-name" type="text" formControlName="lastName" autocomplete="family-name" placeholder="Họ của bạn">
+          @if(signupForm.controls.lastName.errors?.['required'] && signupForm.controls.lastName.touched){
+            <span class="field-error">Vui lòng nhập họ.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="signup-username">Tên đăng nhập</label>
+          <input id="signup-username" type="text" formControlName="username" autocomplete="username" placeholder="Ví dụ: minhanh123">
+          @if(signupForm.controls.username.errors?.['required'] && signupForm.controls.username.touched){
+            <span class="field-error">Tên đăng nhập là bắt buộc.</span>
+          }
+          @if(signupForm.controls.username.errors?.['minlength'] && signupForm.controls.username.touched){
+            <span class="field-error">Tên đăng nhập cần ít nhất 5 ký tự.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="signup-email">Email</label>
+          <input id="signup-email" type="email" formControlName="email" autocomplete="email" placeholder="ban@email.com">
+          @if(signupForm.controls.email.errors?.['required'] && signupForm.controls.email.touched){
+            <span class="field-error">Email là bắt buộc.</span>
+          }
+          @if(signupForm.controls.email.errors?.['email'] && signupForm.controls.email.touched){
+            <span class="field-error">Email chưa đúng định dạng.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="signup-phone">Số điện thoại</label>
+          <input id="signup-phone" type="tel" formControlName="phoneNumber" autocomplete="tel" placeholder="0912345678 hoặc +84912345678">
+          @if(signupForm.controls.phoneNumber.errors?.['required'] && signupForm.controls.phoneNumber.touched){
+            <span class="field-error">Số điện thoại là bắt buộc.</span>
+          }
+          @if(signupForm.controls.phoneNumber.errors?.['pattern'] && signupForm.controls.phoneNumber.touched){
+            <span class="field-error">Nhập số di động Việt Nam hợp lệ: 10 số bắt đầu bằng 03, 05, 07, 08, 09 hoặc mã +84.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="signup-birth-date">Ngày sinh <span class="optional-label">Không bắt buộc</span></label>
+          <input id="signup-birth-date" type="date" formControlName="dateOfBirth" autocomplete="bday">
+        </div>
+
+        <div class="form-field">
+          <label for="signup-gender">Giới tính <span class="optional-label">Không bắt buộc</span></label>
+          <select id="signup-gender" formControlName="gender" autocomplete="sex">
+            <option value="">Chọn giới tính</option>
+            <option value="MALE">Nam</option>
+            <option value="FEMALE">Nữ</option>
+            <option value="OTHER">Khác</option>
+            <option value="PREFER_NOT_TO_SAY">Không muốn tiết lộ</option>
+          </select>
+        </div>
+
+        <div class="form-field">
+          <label for="signup-password">Mật khẩu</label>
+          <input id="signup-password" type="password" formControlName="password" autocomplete="new-password" placeholder="Ít nhất 8 ký tự">
+          @if(signupForm.controls.password.errors?.['required'] && signupForm.controls.password.touched){
+            <span class="field-error">Mật khẩu là bắt buộc.</span>
+          }
+          @if(signupForm.controls.password.errors?.['minlength'] && signupForm.controls.password.touched){
+            <span class="field-error">Mật khẩu cần ít nhất 8 ký tự.</span>
+          }
+        </div>
+
+        <div class="form-field">
+          <label for="signup-password-confirm">Xác nhận mật khẩu</label>
+          <input id="signup-password-confirm" type="password" formControlName="passwordRetype" autocomplete="new-password" placeholder="Nhập lại mật khẩu">
+          @if(signupForm.controls.passwordRetype.errors?.['required'] && signupForm.controls.passwordRetype.touched){
+            <span class="field-error">Vui lòng xác nhận mật khẩu.</span>
+          }
+          @if(signupForm.errors?.['passwordMismatch'] && signupForm.controls.passwordRetype.touched){
+            <span class="field-error">Mật khẩu xác nhận chưa khớp.</span>
+          }
+        </div>
+      </div>
+
+      <button class="auth-submit" type="submit">Tạo tài khoản <span aria-hidden="true">↗</span></button>
+    </form>
+
+    <p class="auth-switch">Bạn đã có tài khoản? <a routerLink="/login">Đăng nhập</a></p>
+    <div class="auth-secure"><span aria-hidden="true">✳</span> Thông tin của bạn được bảo vệ an toàn</div>
+  </section>
+</main>
